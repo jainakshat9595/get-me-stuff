@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "144621081419",
+    "firebase_url": "https://getmestuff-ca81f.firebaseio.com",
+    "project_id": "getmestuff-ca81f",
+    "storage_bucket": "getmestuff-ca81f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:144621081419:android:3d0c2fbd13a73aa7",
+        "android_client_info": {
+          "package_name": "in.jainakshat.getmestuff"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "144621081419-ven51pag0gki6vht8l7bvnbic836969c.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCN2ZiWkltsI55cRBnM9b7aY1qGKHGY_Yw"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
