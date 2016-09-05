@@ -17,9 +17,15 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.messaging.FirebaseMessaging;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.UnsupportedEncodingException;
+
 import in.jainakshat.getmestuff.adapter.MainAdapter;
 import in.jainakshat.getmestuff.database.FirebaseUtil;
 import in.jainakshat.getmestuff.model.Item;
+import in.jainakshat.getmestuff.utils.NotificationUtil;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -40,36 +46,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        FirebaseMessaging.getInstance().subscribeToTopic("notifs");
-
-        mAddFrame = (FrameLayout) findViewById(R.id.add_frame);
-        mAddFrame.setVisibility(View.GONE);
-
-        mAddItemName = (EditText) findViewById(R.id.add_item_name);
-        mAddItemQuant = (EditText) findViewById(R.id.add_item_quantity);
-        mAddItemDesc = (EditText) findViewById(R.id.add_item_desc);
-
-        mFab = (FloatingActionButton) findViewById(R.id.fab_add);
-        mFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(addFrameOpened) {
-                    Item item = new Item();
-                    item.setName(mAddItemName.getText().toString());
-                    item.setQuant(mAddItemQuant.getText().toString());
-                    item.setDesc(mAddItemDesc.getText().toString());
-                    item.setTimestamp(System.currentTimeMillis());
-                    FirebaseUtil.addItem(item);
-                    closeAddFrame();
-                    addFrameOpened = false;
-                    clearAll();
-                } else {
-                    openAddFrame();
-                    addFrameOpened = true;
-                }
-            }
-        });
 
         mRVMain = (RecyclerView) findViewById(R.id.rv_main_list);
         mRVMain.setLayoutManager(new LinearLayoutManager(getBaseContext(), LinearLayoutManager.VERTICAL, false));
@@ -104,6 +80,47 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+        FirebaseMessaging.getInstance().subscribeToTopic("notifs");
+
+        mAddFrame = (FrameLayout) findViewById(R.id.add_frame);
+        mAddFrame.setVisibility(View.GONE);
+
+        mAddItemName = (EditText) findViewById(R.id.add_item_name);
+        mAddItemQuant = (EditText) findViewById(R.id.add_item_quantity);
+        mAddItemDesc = (EditText) findViewById(R.id.add_item_desc);
+
+        mFab = (FloatingActionButton) findViewById(R.id.fab_add);
+        mFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(addFrameOpened) {
+                    Item item = new Item();
+                    item.setName(mAddItemName.getText().toString());
+                    item.setQuant(mAddItemQuant.getText().toString());
+                    item.setDesc(mAddItemDesc.getText().toString());
+                    item.setTimestamp(System.currentTimeMillis());
+                    FirebaseUtil.addItem(getBaseContext(), item);
+                    try {
+                        JSONObject data = new JSONObject();
+                        data.put("ITEM_NAME", item.getName());
+                        data.put("ITEM_QUANTITY", item.getQuant());
+                        NotificationUtil.post(getBaseContext(), data);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                    }
+                    closeAddFrame();
+                    addFrameOpened = false;
+                    clearAll();
+                } else {
+                    openAddFrame();
+                    addFrameOpened = true;
+                }
+            }
+        });
+
     }
 
     @Override
@@ -130,7 +147,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void openAddFrame() {
         mAddFrame.setVisibility(View.VISIBLE);
-        mFab.setImageDrawable(getResources().getDrawable(R.drawable.ic_plus_black_18dp));
+        mFab.setImageDrawable(getResources().getDrawable(R.drawable.ic_check_white_18dp));
     }
 
     private void closeAddFrame() {
