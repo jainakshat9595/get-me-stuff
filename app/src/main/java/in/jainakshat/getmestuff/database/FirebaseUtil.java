@@ -38,4 +38,8 @@ public class FirebaseUtil {
         getItemsref().child(id).removeValue();
     }
 
+    public static void setOfflineEnable() {
+        database.setPersistenceEnabled(true);
+    }
+
 }
